@@ -29,9 +29,29 @@ const http = require('http');
 
 // Server
 // Github node-essential
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
+const dataObj = JSON.parse(data);
+
+
 const server = http.createServer((req, res) => {
-    console.log(req);
-    res.end('Hello from the server!');
+    const pathname = req.url;
+    
+    if (pathname === '/' || pathname === '/overview') {
+       res.end("Overview");
+      }else if (pathname === '/api') {
+        res.writeHead(200, {
+          'Content-type': 'application/json'
+        });
+        res.end(data);
+    
+        // Not found
+      } else {
+        res.writeHead(404, {
+          'Content-type': 'text/html',
+          'my-own-header': 'hello-world'
+        });
+        res.end('<h1>Page not found!</h1>');
+      }    
 });
 
 server.listen(8000, '127.0.0.1', () => {
